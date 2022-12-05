@@ -92,8 +92,12 @@ public class Servicio {
       conexion.close();
     }
     return Response.ok().build();
+  }catch (Exception e) {
+    return Response.status(400).entity(j.toJson(new Error(e.getMessage()))).build();
   }
+}
 
+/* 
   @POST
   @Path("consulta_usuario")
   @Consumes(MediaType.APPLICATION_JSON)
@@ -270,4 +274,5 @@ public class Servicio {
     }
     return Response.ok().build();
   }
+*/
 }
