@@ -349,6 +349,90 @@ public class Servicio {
     return Response.ok().build();
   }
 
+  @POST
+  @Path("alta_usuario")
+  @Consumes(MediaType.APPLICATION_JSON)
+  @Produces(MediaType.APPLICATION_JSON)
+  public Response alta(String json) throws Exception
+  {
+    ParamAltaUsuario p = (ParamAltaUsuario) j.fromJson(json,ParamAltaUsuario.class);
+    Usuario usuario = p.usuario;
+
+    Connection conexion = pool.getConnection();
+
+    if (usuario.email == null || usuario.email.equals(""))
+      return Response.status(400).entity(j.toJson(new Error("Se debe ingresar el email"))).build();
+
+    if (usuario.nombre == null || usuario.nombre.equals(""))
+      return Response.status(400).entity(j.toJson(new Error("Se debe ingresar el nombre"))).build();
+
+    if (usuario.apellido_paterno == null || usuario.apellido_paterno.equals(""))
+      return Response.status(400).entity(j.toJson(new Error("Se debe ingresar el apellido paterno"))).build();
+
+    if (usuario.fecha_nacimiento == null)
+      return Response.status(400).entity(j.toJson(new Error("Se debe ingresar la fecha de nacimiento"))).build();
+
+    try
+    {
+      conexion.setAutoCommit(false);
+
+      PreparedStatement stmt_1 = conexion.prepareStatement("INSERT INTO usuarios(id_usuario,email,nombre,apellido_paterno,apellido_materno,fecha_nacimiento,telefono,genero) VALUES (0,?,?,?,?,?,?,?)");
+ 
+      try
+      {
+        stmt_1.setString(1,usuario.email);
+        stmt_1.setString(2,usuario.nombre);
+        stmt_1.setString(3,usuario.apellido_paterno);
+
+        if (usuario.apellido_materno != null)
+          stmt_1.setString(4,usuario.apellido_materno);
+        else
+          stmt_1.setNull(4,Types.VARCHAR);
+
+        stmt_1.setTimestamp(5,usuario.fecha_nacimiento);
+
+        if (usuario.telefono != null)
+          stmt_1.setLong(6,usuario.telefono);
+        else
+          stmt_1.setNull(6,Types.BIGINT);
+
+        stmt_1.setString(7,usuario.genero);
+        stmt_1.executeUpdate();
+      }
+      finally
+      {
+        stmt_1.close();
+      }
+
+      if (usuario.foto != null)
+      {
+        PreparedStatement stmt_2 = conexion.prepareStatement("INSERT INTO fotos_usuarios(id_foto,foto,id_usuario) VALUES (0,?,(SELECT id_usuario FROM usuarios WHERE email=?))");
+        try
+        {
+          stmt_2.setBytes(1,usuario.foto);
+          stmt_2.setString(2,usuario.email);
+          stmt_2.executeUpdate();
+        }
+        finally
+        {
+          stmt_2.close();
+        }
+      }
+      conexion.commit();
+    }
+    catch (Exception e)
+    {
+      conexion.rollback();
+      return Response.status(400).entity(j.toJson(new Error(e.getMessage()))).build();
+    }
+    finally
+    {
+      conexion.setAutoCommit(true);
+      conexion.close();
+    }
+    return Response.ok().build();
+  }
+
   /*
    * @POST
    * 
