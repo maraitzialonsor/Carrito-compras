@@ -148,7 +148,7 @@ public class Servicio {
       PreparedStatement stmt_1 = conexion.prepareStatement(
           "SELECT a.descripcion FROM articulos a WHERE id_articulo=?");
       try {
-        stmt_1.setString(1, id_articulo);
+        stmt_1.setInt(1, id_articulo);
 
         ResultSet rs = stmt_1.executeQuery();
         try {
@@ -204,7 +204,7 @@ public class Servicio {
           if (cantidadStock > cantidad) {
             cantidadStockActualizada = cantidadStock - cantidad;
             cantidadCarrito = cantidad;
-            return Response.ok().entity(j.toJson(r)).build();
+            return Response.ok().entity(j.toJson(rs)).build();
           } else {
             cantidadCarrito = cantidadStock;
             return Response.status(400).entity(j.toJson(new Error("La cantidad deseada no está disponible en stock")))
@@ -311,7 +311,7 @@ public class Servicio {
 
         ResultSet rs = stmt_1.executeQuery();
         cantidadCarrito = rs.getInt(1);
-        id_articulo=r.getInt(2);
+        id_articulo=rs.getInt(2);
 
         stmt_1.executeUpdate();
       } finally {
