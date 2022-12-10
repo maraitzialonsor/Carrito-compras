@@ -1,7 +1,3 @@
-/*
-  Carlos Pineda Guerrero, noviembre 2022
-*/
-
 package servicio_json;
 
 public class Articulo
@@ -11,4 +7,5 @@ public class Articulo
   Float precio;
   Integer cantidad_almacen;
   byte[] foto;
+  Integer id_articulo;
 }
