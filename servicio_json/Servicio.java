@@ -1,10 +1,3 @@
-/*
-  Servicio.java
-  Servicio web tipo REST
-  Recibe parámetros utilizando JSON
-  Carlos Pineda Guerrero, noviembre 2022
-*/
-
 package servicio_json;
 
 import javax.ws.rs.GET;
