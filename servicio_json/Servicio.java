@@ -154,17 +154,10 @@ public class Servicio {
         try {
           if (rs.next()) {
             Articulo r = new Articulo();
-            r.email = rs.getString(1);
-            r.nombre = rs.getString(2);
-            r.apellido_paterno = rs.getString(3);
-            r.apellido_materno = rs.getString(4);
-            r.fecha_nacimiento = rs.getTimestamp(5);
-            r.telefono = rs.getObject(6) != null ? rs.getLong(6) : null;
-            r.genero = rs.getString(7);
-            r.foto = rs.getBytes(8);
+            r.descripcion = rs.getString(1);
             return Response.ok().entity(j.toJson(r)).build();
           }
-          return Response.status(400).entity(j.toJson(new Error("El email no existe"))).build();
+          return Response.status(400).entity(j.toJson(new Error("El articulo no existe"))).build();
         } finally {
           rs.close();
         }
