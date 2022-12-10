@@ -179,8 +179,8 @@ public class Servicio {
     ParamCompraArticulo p = (ParamCompraArticulo) j.fromJson(json, ParamCompraArticulo.class);
     Integer id_articulo = p.id_articulo;
     Integer cantidad = p.cantidad;
-    Integer cantidadStockActualizada;
-    Integer cantidadCarrito;
+    Integer cantidadStockActualizada=null;
+    Integer cantidadCarrito=null;
 
     Connection conexion = pool.getConnection();
 
